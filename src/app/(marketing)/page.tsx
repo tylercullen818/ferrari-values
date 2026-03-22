@@ -19,7 +19,7 @@ import {
   getAllCategories,
   type FerrariCategory,
 } from "@/data/ferraris";
-import { getModelImage } from "@/data/images";
+import { getModelImage, HERO_IMAGE } from "@/data/images";
 
 type SortOption = "value-desc" | "value-asc" | "change-desc" | "change-asc" | "name";
 type FilterCategory = "All" | FerrariCategory;
@@ -81,60 +81,58 @@ export default function HomePage() {
   return (
     <>
       {/* Hero - Full bleed cinematic F40 photo */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-[#0A0A0A]">
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[#0A0A0A]">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=1600&q=80"
+            src={HERO_IMAGE}
             alt="Ferrari F40"
             fill
-            className="object-cover opacity-50"
+            className="object-cover"
             priority
             sizes="100vw"
           />
         </div>
 
-        {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/70 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-[#0A0A0A]/40" />
+        {/* Gradient overlay: black/80 to transparent */}
+        <div className="absolute inset-0 bg-black/80" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-[#0A0A0A]/60" />
 
-        {/* Content overlay */}
-        <div className="relative z-10 container py-20">
-          <div className="max-w-2xl">
-            <BlurFade delay={0}>
-              <div className="mb-6 inline-flex items-center gap-2 border border-[#333] bg-[#141414]/80 px-4 py-1.5 text-xs font-medium tracking-[0.1em] uppercase text-[#888880] backdrop-blur-sm">
-                <TrendingUp className="size-3.5 text-[#DC0000]" />
-                Real market data — March 2026
-              </div>
-            </BlurFade>
-            <BlurFade delay={0.05}>
-              <h1 className="text-5xl font-bold tracking-[-0.02em] leading-[1.1] sm:text-6xl md:text-7xl lg:text-8xl text-[#F5F5F0]">
-                Ferrari Market
-                <br />
-                <span className="text-[#DC0000]">Intelligence</span>
-              </h1>
-            </BlurFade>
-            <BlurFade delay={0.1}>
-              <p className="mt-6 max-w-lg text-lg text-[#888880] leading-relaxed">
-                Track values, spot trends, and make informed decisions across {totalModelsTracked} models with real auction data from 2020-2026.
-              </p>
-            </BlurFade>
-            <BlurFade delay={0.15}>
-              <div className="mt-8 flex gap-4">
-                <Button size="lg" className="bg-[#DC0000] hover:bg-[#B30000] text-white rounded-none px-8 text-sm tracking-[0.05em] uppercase font-medium" asChild>
-                  <a href="#models">Explore Models</a>
-                </Button>
-                <Button size="lg" variant="outline" className="border-[#333] text-[#F5F5F0] hover:bg-[#141414] rounded-none px-8 text-sm tracking-[0.05em] uppercase font-medium" asChild>
-                  <Link href="/compare">Compare</Link>
-                </Button>
-              </div>
-            </BlurFade>
-          </div>
+        {/* Content overlay - centered */}
+        <div className="relative z-10 mx-auto max-w-4xl px-6 md:px-12 lg:px-16 text-center">
+          <BlurFade delay={0}>
+            <div className="mb-6 inline-flex items-center gap-2 border border-[#333] bg-[#141414]/80 px-4 py-1.5 text-xs font-medium tracking-[0.1em] uppercase text-[#888880] backdrop-blur-sm">
+              <TrendingUp className="size-3.5 text-[#DC0000]" />
+              Real market data — March 2026
+            </div>
+          </BlurFade>
+          <BlurFade delay={0.05}>
+            <h1 className="text-5xl font-bold tracking-tight leading-[1.1] sm:text-6xl md:text-7xl lg:text-8xl text-[#F5F5F0]">
+              Ferrari Market
+              <br />
+              <span className="text-[#DC0000]">Intelligence</span>
+            </h1>
+          </BlurFade>
+          <BlurFade delay={0.1}>
+            <p className="mx-auto mt-6 max-w-lg text-lg text-[#888880] leading-relaxed text-balance">
+              Track values, spot trends, and make informed decisions across {totalModelsTracked} models with real auction data from 2020-2026.
+            </p>
+          </BlurFade>
+          <BlurFade delay={0.15}>
+            <div className="mt-8 flex justify-center gap-4">
+              <Button size="lg" className="bg-[#DC0000] hover:bg-[#B30000] text-white rounded-none px-8 text-sm tracking-[0.05em] uppercase font-medium" asChild>
+                <a href="#models">Explore Models</a>
+              </Button>
+              <Button size="lg" variant="outline" className="border-[#333] text-[#F5F5F0] hover:bg-[#141414] rounded-none px-8 text-sm tracking-[0.05em] uppercase font-medium" asChild>
+                <Link href="/compare">Compare</Link>
+              </Button>
+            </div>
+          </BlurFade>
         </div>
       </section>
 
       {/* Stats Banner */}
       <section className="border-y border-[#222] bg-[#0e0e0e] py-16">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-12 px-4 sm:gap-20">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-12 px-6 md:px-12 sm:gap-20">
           {[
             { value: totalModelsTracked, label: "MODELS TRACKED", prefix: "" },
             { value: 123, label: `BEST PERFORMER (${bestPerformer.model.name})`, prefix: "+", suffix: "%" },
@@ -142,7 +140,7 @@ export default function HomePage() {
             { value: Math.round(totalMarketValue / 1000000), label: "TOTAL MARKET VALUE", prefix: "$", suffix: "M" },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
-              <p className={`text-5xl md:text-6xl font-bold tabular-nums tracking-[-0.02em] ${stat.highlight ? "text-loss" : "text-[#F5F5F0]"}`}>
+              <p className={`text-5xl md:text-6xl font-bold tabular-nums tracking-tight ${stat.highlight ? "text-loss" : "text-[#F5F5F0]"}`}>
                 {stat.prefix}<NumberTicker value={stat.value} />{stat.suffix || ""}
               </p>
               <p className="mt-2 text-[10px] font-medium tracking-[0.15em] uppercase text-[#888880]">
@@ -154,32 +152,30 @@ export default function HomePage() {
       </section>
 
       {/* Model Grid */}
-      <section id="models" className="mx-auto max-w-7xl px-4 py-20">
+      <section id="models" className="mx-auto max-w-7xl px-6 md:px-12 lg:px-16 py-20">
         <BlurFade delay={0} inView>
           <div className="mb-10">
-            <h2 className="text-4xl font-bold tracking-[-0.02em] text-[#F5F5F0]">All Models</h2>
-            <p className="mt-2 text-sm text-[#888880]">
+            <h2 className="text-4xl font-bold tracking-tight text-[#F5F5F0]">All Models</h2>
+            <p className="mt-2 text-sm text-[#888880] text-balance">
               {filtered.length} of {ferrariModels.length} models — 6-year market data (2020-2026)
             </p>
           </div>
         </BlurFade>
 
-        {/* Category Tabs */}
-        <div className="mb-6 flex flex-wrap gap-1.5">
+        {/* Category Filter Pills */}
+        <div className="mb-6 flex flex-wrap gap-2">
           {categories.map((cat) => (
-            <Button
+            <button
               key={cat}
-              size="sm"
-              variant={categoryFilter === cat ? "default" : "outline"}
               onClick={() => setCategoryFilter(cat)}
-              className={`rounded-none text-xs ${
+              className={`rounded-full px-4 py-1.5 text-xs font-medium transition-all duration-200 ${
                 categoryFilter === cat
-                  ? "bg-[#DC0000] hover:bg-[#B30000] text-white"
-                  : "border-[#333] text-[#888880] hover:text-[#F5F5F0]"
+                  ? "bg-[#DC0000] text-white shadow-lg shadow-[#DC0000]/20"
+                  : "border border-white/10 text-[#888880] hover:text-[#F5F5F0] hover:border-white/20"
               }`}
             >
               {cat}
-            </Button>
+            </button>
           ))}
         </div>
 
@@ -219,19 +215,17 @@ export default function HomePage() {
                     { value: "change-asc" as SortOption, label: "Worst Depreciation" },
                     { value: "name" as SortOption, label: "Name" },
                   ].map((s) => (
-                    <Button
+                    <button
                       key={s.value}
-                      size="sm"
-                      variant={sort === s.value ? "default" : "outline"}
                       onClick={() => setSort(s.value)}
-                      className={`rounded-none text-xs ${
+                      className={`rounded-full px-4 py-1.5 text-xs font-medium transition-all duration-200 ${
                         sort === s.value
-                          ? "bg-[#DC0000] hover:bg-[#B30000] text-white"
-                          : "border-[#333] text-[#888880] hover:text-[#F5F5F0]"
+                          ? "bg-[#DC0000] text-white shadow-lg shadow-[#DC0000]/20"
+                          : "border border-white/10 text-[#888880] hover:text-[#F5F5F0] hover:border-white/20"
                       }`}
                     >
                       {s.label}
-                    </Button>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -244,7 +238,7 @@ export default function HomePage() {
           {filtered.map((model, i) => (
             <BlurFade key={model.slug} delay={Math.min(i * 0.02, 0.2)} inView>
               <Link href={`/models/${model.slug}`}>
-                <div className="group relative h-[380px] overflow-hidden border border-[#222] bg-[#141414] cursor-pointer transition-all duration-500 hover:border-[#DC0000]/40">
+                <div className="group relative h-[380px] overflow-hidden border border-white/5 bg-[#141414] cursor-pointer transition-transform duration-300 hover:scale-[1.02] hover:border-[#DC0000]/40">
                   {/* Background image */}
                   <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-110">
                     <Image
@@ -274,7 +268,7 @@ export default function HomePage() {
                   {/* Content at bottom */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
                     <p className="text-xs text-[#888880] mb-1">{model.yearRange} — {model.engine}</p>
-                    <h3 className="text-2xl font-bold tracking-[-0.02em] text-[#F5F5F0] group-hover:text-[#DC0000] transition-colors duration-300">
+                    <h3 className="text-2xl font-bold tracking-tight text-[#F5F5F0] group-hover:text-[#DC0000] transition-colors duration-300">
                       {model.name}
                     </h3>
                     <div className="mt-3 flex items-end justify-between">
@@ -309,9 +303,9 @@ export default function HomePage() {
 
       {/* Market Overview */}
       <section className="border-y border-[#222] bg-[#0e0e0e] py-20">
-        <div className="mx-auto max-w-6xl px-4">
+        <div className="mx-auto max-w-6xl px-6 md:px-12 lg:px-16">
           <BlurFade delay={0} inView>
-            <h2 className="mb-12 text-4xl font-bold tracking-[-0.02em] text-center text-[#F5F5F0]">
+            <h2 className="mb-12 text-4xl font-bold tracking-tight text-center text-[#F5F5F0]">
               Market Snapshot
             </h2>
           </BlurFade>
@@ -385,13 +379,13 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="px-4 py-20">
+      <section className="px-6 md:px-12 lg:px-16 py-20">
         <BlurFade delay={0} inView>
           <div className="mx-auto max-w-2xl border border-[#222] bg-[#141414] p-10 text-center md:p-16">
-            <h2 className="mb-4 text-3xl font-bold tracking-[-0.02em] text-[#F5F5F0]">
+            <h2 className="mb-4 text-3xl font-bold tracking-tight text-[#F5F5F0]">
               Compare Models Head to Head
             </h2>
-            <p className="mb-8 text-[#888880]">
+            <p className="mb-8 text-[#888880] text-balance">
               Select up to 4 models and compare values, trends, and investment potential side by side.
             </p>
             <Button size="lg" className="bg-[#DC0000] hover:bg-[#B30000] text-white rounded-none px-10 text-sm tracking-[0.05em] uppercase font-medium" asChild>
