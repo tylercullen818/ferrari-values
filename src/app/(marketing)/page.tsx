@@ -81,7 +81,7 @@ export default function HomePage() {
   return (
     <>
       {/* Hero - Full bleed cinematic F40 photo */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[#0A0A0A]">
+      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-[#0A0A0A]">
         <div className="absolute inset-0">
           <Image
             src={HERO_IMAGE}
@@ -152,7 +152,7 @@ export default function HomePage() {
       </section>
 
       {/* Model Grid */}
-      <section id="models" className="mx-auto max-w-7xl px-6 md:px-12 lg:px-16 py-20">
+      <section id="models" className="mx-auto max-w-7xl px-6 md:px-8 lg:px-12 py-20">
         <BlurFade delay={0} inView>
           <div className="mb-10">
             <h2 className="text-4xl font-bold tracking-tight text-[#F5F5F0]">All Models</h2>
@@ -234,39 +234,34 @@ export default function HomePage() {
         </div>
 
         {/* Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((model, i) => (
             <BlurFade key={model.slug} delay={Math.min(i * 0.02, 0.2)} inView>
               <Link href={`/models/${model.slug}`}>
-                <div className="group relative h-[380px] overflow-hidden border border-white/5 bg-[#141414] cursor-pointer transition-transform duration-300 hover:scale-[1.02] hover:border-[#DC0000]/40">
-                  {/* Background image */}
-                  <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-110">
+                <div className="group overflow-hidden border border-white/10 bg-[#141414] cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:border-[#DC0000]/40">
+                  {/* Card image */}
+                  <div className="aspect-[16/9] relative overflow-hidden">
                     <Image
                       src={getModelImage(model.slug)}
                       alt={model.name}
                       fill
-                      className="object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-500"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
+                    {/* Category badge */}
+                    <div className="absolute top-4 left-4 z-10">
+                      <span className="text-[10px] font-medium tracking-[0.15em] uppercase text-[#888880] bg-[#0A0A0A]/70 px-2.5 py-1 backdrop-blur-sm border border-[#333]">
+                        {model.category}
+                      </span>
+                    </div>
+                    {/* 6Y change badge */}
+                    <div className="absolute top-4 right-4 z-10">
+                      <TrendArrow change={model.sixYearChange} />
+                    </div>
                   </div>
 
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/60 to-transparent" />
-
-                  {/* Category badge */}
-                  <div className="absolute top-4 left-4 z-10">
-                    <span className="text-[10px] font-medium tracking-[0.15em] uppercase text-[#888880] bg-[#0A0A0A]/70 px-2.5 py-1 backdrop-blur-sm border border-[#333]">
-                      {model.category}
-                    </span>
-                  </div>
-
-                  {/* 6Y change badge */}
-                  <div className="absolute top-4 right-4 z-10">
-                    <TrendArrow change={model.sixYearChange} />
-                  </div>
-
-                  {/* Content at bottom */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+                  {/* Card content */}
+                  <div className="p-5">
                     <p className="text-xs text-[#888880] mb-1">{model.yearRange} — {model.engine}</p>
                     <h3 className="text-2xl font-bold tracking-tight text-[#F5F5F0] group-hover:text-[#DC0000] transition-colors duration-300">
                       {model.name}
@@ -303,7 +298,7 @@ export default function HomePage() {
 
       {/* Market Overview */}
       <section className="border-y border-[#222] bg-[#0e0e0e] py-20">
-        <div className="mx-auto max-w-6xl px-6 md:px-12 lg:px-16">
+        <div className="mx-auto max-w-7xl px-6 md:px-8 lg:px-12">
           <BlurFade delay={0} inView>
             <h2 className="mb-12 text-4xl font-bold tracking-tight text-center text-[#F5F5F0]">
               Market Snapshot
@@ -379,7 +374,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="px-6 md:px-12 lg:px-16 py-20">
+      <section className="mx-auto max-w-7xl px-6 md:px-8 lg:px-12 py-20">
         <BlurFade delay={0} inView>
           <div className="mx-auto max-w-2xl border border-[#222] bg-[#141414] p-10 text-center md:p-16">
             <h2 className="mb-4 text-3xl font-bold tracking-tight text-[#F5F5F0]">

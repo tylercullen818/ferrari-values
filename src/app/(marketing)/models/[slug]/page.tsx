@@ -68,7 +68,7 @@ export default function ModelDetailPage({
   return (
     <div>
       {/* Full-width hero image */}
-      <div className="relative h-[50vh] min-h-[400px] w-full overflow-hidden">
+      <div className="relative aspect-[21/9] w-full overflow-hidden">
         <Image
           src={getModelImage(model.slug)}
           alt={model.name}
@@ -143,10 +143,10 @@ export default function ModelDetailPage({
         </div>
       </div>
 
-      <div className="mx-auto max-w-6xl px-4 py-12">
+      <div className="mx-auto max-w-6xl px-6 py-12">
         {/* Key Stats */}
         <BlurFade delay={0.05}>
-          <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mb-10 grid grid-cols-2 md:grid-cols-4 gap-4">
             {model.startValue && (
               <div className="border border-[#222] bg-[#141414] p-6">
                 <p className="text-[10px] uppercase tracking-[0.15em] text-[#888880]">2020 Value</p>
@@ -190,7 +190,7 @@ export default function ModelDetailPage({
           <BlurFade delay={0.1}>
             <div className="border border-[#222] bg-[#141414] p-6 mb-4">
               <h3 className="text-sm font-semibold text-[#F5F5F0] mb-6">Value History (2020-2026)</h3>
-              <div className="h-[350px]">
+              <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={model.historicalValues}>
                     <defs>
