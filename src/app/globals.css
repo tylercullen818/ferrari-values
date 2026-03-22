@@ -3,43 +3,47 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
-  Custom warm/sophisticated palette.
-  Light: warm ivory backgrounds, stone-brown accents, deep espresso text.
-  Dark: warm charcoal backgrounds, amber-gold accents, cream text.
+  Ferrari-inspired palette.
+  Light: warm ivory backgrounds, Ferrari red accents, deep text.
+  Dark: charcoal backgrounds, Ferrari red accents, cream text.
 */
 
 @theme inline {
-  --color-background: oklch(0.98 0.005 75);
-  --color-foreground: oklch(0.22 0.02 50);
-  --color-card: oklch(0.97 0.005 75);
-  --color-card-foreground: oklch(0.22 0.02 50);
-  --color-popover: oklch(0.97 0.005 75);
-  --color-popover-foreground: oklch(0.22 0.02 50);
-  --color-primary: oklch(0.42 0.06 50);
-  --color-primary-foreground: oklch(0.98 0.005 75);
-  --color-secondary: oklch(0.93 0.01 75);
-  --color-secondary-foreground: oklch(0.32 0.03 50);
-  --color-muted: oklch(0.93 0.008 75);
-  --color-muted-foreground: oklch(0.52 0.02 50);
-  --color-accent: oklch(0.91 0.015 75);
-  --color-accent-foreground: oklch(0.28 0.03 50);
+  --color-background: oklch(0.98 0.003 75);
+  --color-foreground: oklch(0.15 0.02 50);
+  --color-card: oklch(0.97 0.003 75);
+  --color-card-foreground: oklch(0.15 0.02 50);
+  --color-popover: oklch(0.97 0.003 75);
+  --color-popover-foreground: oklch(0.15 0.02 50);
+  --color-primary: oklch(0.52 0.22 25);
+  --color-primary-foreground: oklch(0.98 0.003 75);
+  --color-secondary: oklch(0.93 0.008 75);
+  --color-secondary-foreground: oklch(0.25 0.02 50);
+  --color-muted: oklch(0.93 0.006 75);
+  --color-muted-foreground: oklch(0.50 0.015 50);
+  --color-accent: oklch(0.91 0.01 75);
+  --color-accent-foreground: oklch(0.20 0.02 50);
   --color-destructive: oklch(0.55 0.2 25);
-  --color-border: oklch(0.88 0.015 75);
-  --color-input: oklch(0.88 0.015 75);
-  --color-ring: oklch(0.42 0.06 50);
-  --color-chart-1: oklch(0.55 0.12 45);
-  --color-chart-2: oklch(0.6 0.1 160);
-  --color-chart-3: oklch(0.55 0.1 250);
+  --color-border: oklch(0.90 0.01 75);
+  --color-input: oklch(0.90 0.01 75);
+  --color-ring: oklch(0.52 0.22 25);
+  --color-chart-1: oklch(0.52 0.22 25);
+  --color-chart-2: oklch(0.60 0.15 145);
+  --color-chart-3: oklch(0.55 0.10 250);
   --color-chart-4: oklch(0.65 0.12 75);
   --color-chart-5: oklch(0.55 0.15 15);
-  --color-sidebar: oklch(0.96 0.005 75);
-  --color-sidebar-foreground: oklch(0.22 0.02 50);
-  --color-sidebar-primary: oklch(0.42 0.06 50);
-  --color-sidebar-primary-foreground: oklch(0.98 0.005 75);
-  --color-sidebar-accent: oklch(0.91 0.015 75);
-  --color-sidebar-accent-foreground: oklch(0.28 0.03 50);
-  --color-sidebar-border: oklch(0.88 0.015 75);
-  --color-sidebar-ring: oklch(0.42 0.06 50);
+  --color-sidebar: oklch(0.96 0.003 75);
+  --color-sidebar-foreground: oklch(0.15 0.02 50);
+  --color-sidebar-primary: oklch(0.52 0.22 25);
+  --color-sidebar-primary-foreground: oklch(0.98 0.003 75);
+  --color-sidebar-accent: oklch(0.91 0.01 75);
+  --color-sidebar-accent-foreground: oklch(0.20 0.02 50);
+  --color-sidebar-border: oklch(0.90 0.01 75);
+  --color-sidebar-ring: oklch(0.52 0.22 25);
+  --color-ferrari-red: #DC0000;
+  --color-ferrari-red-dark: #B30000;
+  --color-gain: oklch(0.60 0.15 145);
+  --color-loss: oklch(0.55 0.2 25);
   --radius: 0.5rem;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -58,37 +62,37 @@
 }
 
 .dark {
-  --color-background: oklch(0.18 0.015 50);
-  --color-foreground: oklch(0.92 0.01 75);
-  --color-card: oklch(0.21 0.015 50);
-  --color-card-foreground: oklch(0.92 0.01 75);
-  --color-popover: oklch(0.21 0.015 50);
-  --color-popover-foreground: oklch(0.92 0.01 75);
-  --color-primary: oklch(0.72 0.12 70);
-  --color-primary-foreground: oklch(0.18 0.015 50);
-  --color-secondary: oklch(0.26 0.015 50);
-  --color-secondary-foreground: oklch(0.88 0.01 75);
-  --color-muted: oklch(0.26 0.012 50);
-  --color-muted-foreground: oklch(0.65 0.02 75);
-  --color-accent: oklch(0.28 0.02 50);
-  --color-accent-foreground: oklch(0.88 0.01 75);
+  --color-background: oklch(0.14 0.01 50);
+  --color-foreground: oklch(0.92 0.008 75);
+  --color-card: oklch(0.18 0.01 50);
+  --color-card-foreground: oklch(0.92 0.008 75);
+  --color-popover: oklch(0.18 0.01 50);
+  --color-popover-foreground: oklch(0.92 0.008 75);
+  --color-primary: oklch(0.60 0.22 25);
+  --color-primary-foreground: oklch(0.98 0.003 75);
+  --color-secondary: oklch(0.22 0.01 50);
+  --color-secondary-foreground: oklch(0.88 0.008 75);
+  --color-muted: oklch(0.22 0.008 50);
+  --color-muted-foreground: oklch(0.62 0.015 75);
+  --color-accent: oklch(0.24 0.015 50);
+  --color-accent-foreground: oklch(0.88 0.008 75);
   --color-destructive: oklch(0.55 0.2 25);
-  --color-border: oklch(0.3 0.015 50);
-  --color-input: oklch(0.3 0.015 50);
-  --color-ring: oklch(0.72 0.12 70);
-  --color-chart-1: oklch(0.72 0.12 70);
-  --color-chart-2: oklch(0.65 0.1 160);
-  --color-chart-3: oklch(0.65 0.1 250);
-  --color-chart-4: oklch(0.7 0.12 45);
+  --color-border: oklch(0.28 0.01 50);
+  --color-input: oklch(0.28 0.01 50);
+  --color-ring: oklch(0.60 0.22 25);
+  --color-chart-1: oklch(0.60 0.22 25);
+  --color-chart-2: oklch(0.65 0.12 145);
+  --color-chart-3: oklch(0.65 0.10 250);
+  --color-chart-4: oklch(0.70 0.12 75);
   --color-chart-5: oklch(0.65 0.15 15);
-  --color-sidebar: oklch(0.2 0.015 50);
-  --color-sidebar-foreground: oklch(0.92 0.01 75);
-  --color-sidebar-primary: oklch(0.72 0.12 70);
-  --color-sidebar-primary-foreground: oklch(0.18 0.015 50);
-  --color-sidebar-accent: oklch(0.28 0.02 50);
-  --color-sidebar-accent-foreground: oklch(0.88 0.01 75);
-  --color-sidebar-border: oklch(0.3 0.015 50);
-  --color-sidebar-ring: oklch(0.72 0.12 70);
+  --color-sidebar: oklch(0.16 0.01 50);
+  --color-sidebar-foreground: oklch(0.92 0.008 75);
+  --color-sidebar-primary: oklch(0.60 0.22 25);
+  --color-sidebar-primary-foreground: oklch(0.98 0.003 75);
+  --color-sidebar-accent: oklch(0.24 0.015 50);
+  --color-sidebar-accent-foreground: oklch(0.88 0.008 75);
+  --color-sidebar-border: oklch(0.28 0.01 50);
+  --color-sidebar-ring: oklch(0.60 0.22 25);
 }
 
 body {

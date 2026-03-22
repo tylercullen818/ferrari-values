@@ -14,8 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Acme Analytics",
-  description: "Simple, powerful analytics for modern teams",
+  title: "Cavallino Analytics | Ferrari Market Intelligence",
+  description:
+    "Track Ferrari market values, appreciation trends, and investment potential across legends, classics, and modern models.",
 };
 
 export default function RootLayout({
