@@ -71,6 +71,7 @@ function ModelSelector({
   const available = ferrariModels.filter(
     (m) =>
       !selectedSlugs.has(m.slug) &&
+      m.historicalValues.length > 1 &&
       (search === "" ||
         m.name.toLowerCase().includes(search.toLowerCase()) ||
         m.yearRange.includes(search))
@@ -120,7 +121,6 @@ function ModelSelector({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="mb-3 w-full border border-[#333] bg-[#0A0A0A] px-3 py-2 text-sm text-[#F5F5F0] focus:outline-none focus:ring-1 focus:ring-[#DC0000]"
-
             autoFocus
           />
           <div className="grid gap-1 max-h-60 overflow-y-auto">
@@ -158,10 +158,11 @@ function ModelSelector({
 }
 
 export default function ComparePage() {
-  const [selected, setSelected] = useState<FerrariModel[]>([
-    ferrariModels.find((m) => m.slug === "f40")!,
-    ferrariModels.find((m) => m.slug === "f50")!,
-  ]);
+  const [selected, setSelected] = useState<FerrariModel[]>(() => {
+    const f40 = ferrariModels.find((m) => m.slug === "f40");
+    const f50 = ferrariModels.find((m) => m.slug === "f50");
+    return [f40, f50].filter(Boolean) as FerrariModel[];
+  });
 
   const chartData = useMemo(() => {
     if (selected.length === 0) return [];
@@ -189,8 +190,7 @@ export default function ComparePage() {
           Compare Models
         </h1>
         <p className="text-[#888880] mb-10">
-          Select 2-4 models to compare values, trends, and investment metrics
-          side by side.
+          Select 2-4 models to compare 2020-2026 value trajectories side by side.
         </p>
       </BlurFade>
 
@@ -205,7 +205,7 @@ export default function ComparePage() {
 
       {selected.length >= 2 && (
         <>
-          {/* Side by side cards with car images */}
+          {/* Side by side cards */}
           <BlurFade delay={0.08}>
             <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {selected.map((model, i) => (
@@ -235,7 +235,7 @@ export default function ComparePage() {
           {/* Chart */}
           <BlurFade delay={0.1}>
             <div className="border border-[#222] bg-[#141414] p-6 mb-8">
-              <h3 className="text-sm font-semibold text-[#F5F5F0] mb-6">Value Trajectories</h3>
+              <h3 className="text-sm font-semibold text-[#F5F5F0] mb-6">Value Trajectories (2020-2026)</h3>
               <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={chartData}>
@@ -332,22 +332,15 @@ export default function ComparePage() {
                   </thead>
                   <tbody>
                     <tr className="border-b border-[#1a1a1a]">
-                      <td className="py-3 pr-4 text-[#888880]">
-                        Year Range
-                      </td>
+                      <td className="py-3 pr-4 text-[#888880]">Year Range</td>
                       {selected.map((m) => (
-                        <td
-                          key={m.slug}
-                          className="py-3 px-4 text-right tabular-nums text-[#F5F5F0]"
-                        >
+                        <td key={m.slug} className="py-3 px-4 text-right tabular-nums text-[#F5F5F0]">
                           {m.yearRange}
                         </td>
                       ))}
                     </tr>
                     <tr className="border-b border-[#1a1a1a]">
-                      <td className="py-3 pr-4 text-[#888880]">
-                        Category
-                      </td>
+                      <td className="py-3 pr-4 text-[#888880]">Category</td>
                       {selected.map((m) => (
                         <td key={m.slug} className="py-3 px-4 text-right text-[#F5F5F0]">
                           {m.category}
@@ -355,50 +348,46 @@ export default function ComparePage() {
                       ))}
                     </tr>
                     <tr className="border-b border-[#1a1a1a]">
-                      <td className="py-3 pr-4 text-[#888880]">
-                        MSRP (New)
-                      </td>
+                      <td className="py-3 pr-4 text-[#888880]">Engine</td>
                       {selected.map((m) => (
-                        <td
-                          key={m.slug}
-                          className="py-3 px-4 text-right tabular-nums text-[#F5F5F0]"
-                        >
-                          {m.msrp ? formatFullCurrency(m.msrp) : "N/A"}
+                        <td key={m.slug} className="py-3 px-4 text-right text-[#F5F5F0]">
+                          {m.engine}
                         </td>
                       ))}
                     </tr>
                     <tr className="border-b border-[#1a1a1a]">
-                      <td className="py-3 pr-4 text-[#888880]">
-                        Current Value
-                      </td>
+                      <td className="py-3 pr-4 text-[#888880]">2020 Value</td>
                       {selected.map((m) => (
-                        <td
-                          key={m.slug}
-                          className="py-3 px-4 text-right font-semibold tabular-nums text-[#F5F5F0]"
-                        >
+                        <td key={m.slug} className="py-3 px-4 text-right tabular-nums text-[#F5F5F0]">
+                          {m.startValue ? formatFullCurrency(m.startValue) : "N/A"}
+                        </td>
+                      ))}
+                    </tr>
+                    <tr className="border-b border-[#1a1a1a]">
+                      <td className="py-3 pr-4 text-[#888880]">2026 Value</td>
+                      {selected.map((m) => (
+                        <td key={m.slug} className="py-3 px-4 text-right font-semibold tabular-nums text-[#F5F5F0]">
                           {formatFullCurrency(m.currentValue)}
                         </td>
                       ))}
                     </tr>
                     <tr className="border-b border-[#1a1a1a]">
-                      <td className="py-3 pr-4 text-[#888880]">
-                        1Y Change
-                      </td>
+                      <td className="py-3 pr-4 text-[#888880]">6-Year Change</td>
                       {selected.map((m) => (
                         <td key={m.slug} className="py-3 px-4 text-right">
-                          {m.change1Y !== null ? (
+                          {m.sixYearChange !== null ? (
                             <span
                               className={`inline-flex items-center gap-0.5 font-semibold ${
-                                m.change1Y >= 0 ? "text-gain" : "text-loss"
+                                m.sixYearChange >= 0 ? "text-gain" : "text-loss"
                               }`}
                             >
-                              {m.change1Y >= 0 ? (
+                              {m.sixYearChange >= 0 ? (
                                 <ArrowUpRight className="size-3" />
                               ) : (
                                 <ArrowDownRight className="size-3" />
                               )}
-                              {m.change1Y >= 0 ? "+" : ""}
-                              {m.change1Y}%
+                              {m.sixYearChange >= 0 ? "+" : ""}
+                              {m.sixYearChange.toFixed(1)}%
                             </span>
                           ) : (
                             <span className="text-[#555]">N/A</span>
@@ -406,93 +395,14 @@ export default function ComparePage() {
                         </td>
                       ))}
                     </tr>
-                    <tr className="border-b border-[#1a1a1a]">
-                      <td className="py-3 pr-4 text-[#888880]">
-                        5Y Change
-                      </td>
+                    <tr>
+                      <td className="py-3 pr-4 text-[#888880]">Data Source</td>
                       {selected.map((m) => (
-                        <td key={m.slug} className="py-3 px-4 text-right">
-                          {m.change5Y !== null ? (
-                            <span
-                              className={`inline-flex items-center gap-0.5 font-semibold ${
-                                m.change5Y >= 0 ? "text-gain" : "text-loss"
-                              }`}
-                            >
-                              {m.change5Y >= 0 ? "+" : ""}
-                              {m.change5Y}%
-                            </span>
-                          ) : (
-                            <span className="text-[#555]">N/A</span>
-                          )}
+                        <td key={m.slug} className="py-3 px-4 text-right text-[#555] text-xs">
+                          {m.dataSource}
                         </td>
                       ))}
                     </tr>
-                    <tr className="border-b border-[#1a1a1a]">
-                      <td className="py-3 pr-4 text-[#888880]">
-                        10Y Change
-                      </td>
-                      {selected.map((m) => (
-                        <td key={m.slug} className="py-3 px-4 text-right">
-                          {m.change10Y !== null ? (
-                            <span
-                              className={`inline-flex items-center gap-0.5 font-semibold ${
-                                m.change10Y >= 0 ? "text-gain" : "text-loss"
-                              }`}
-                            >
-                              {m.change10Y >= 0 ? "+" : ""}
-                              {m.change10Y}%
-                            </span>
-                          ) : (
-                            <span className="text-[#555]">N/A</span>
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                    <tr className="border-b border-[#1a1a1a]">
-                      <td className="py-3 pr-4 text-[#888880]">
-                        Trend
-                      </td>
-                      {selected.map((m) => (
-                        <td key={m.slug} className="py-3 px-4 text-right">
-                          <Badge variant="outline" className="text-xs rounded-none border-[#333] text-[#F5F5F0]">
-                            {m.trend}
-                          </Badge>
-                        </td>
-                      ))}
-                    </tr>
-                    {selected.some((m) => m.msrp) && (
-                      <tr>
-                        <td className="py-3 pr-4 text-[#888880]">
-                          Total Return
-                        </td>
-                        {selected.map((m) => {
-                          if (!m.msrp) {
-                            return (
-                              <td
-                                key={m.slug}
-                                className="py-3 px-4 text-right text-[#555]"
-                              >
-                                N/A
-                              </td>
-                            );
-                          }
-                          const ret = Math.round(
-                            ((m.currentValue - m.msrp) / m.msrp) * 100
-                          );
-                          return (
-                            <td
-                              key={m.slug}
-                              className={`py-3 px-4 text-right font-bold tabular-nums ${
-                                ret >= 0 ? "text-gain" : "text-loss"
-                              }`}
-                            >
-                              {ret >= 0 ? "+" : ""}
-                              {ret.toLocaleString()}%
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    )}
                   </tbody>
                 </table>
               </div>
@@ -508,18 +418,21 @@ export default function ComparePage() {
               Select at least 2 models to start comparing
             </p>
             <div className="flex flex-wrap justify-center gap-2">
-              {ferrariModels.slice(0, 8).map((m) => (
-                <Button
-                  key={m.slug}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setSelected([...selected, m])}
-                  disabled={selected.some((s) => s.slug === m.slug)}
-                  className="rounded-none border-[#333] text-[#888880] hover:text-[#F5F5F0] hover:bg-[#141414]"
-                >
-                  {m.name}
-                </Button>
-              ))}
+              {ferrariModels
+                .filter((m) => m.historicalValues.length > 1)
+                .slice(0, 8)
+                .map((m) => (
+                  <Button
+                    key={m.slug}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSelected([...selected, m])}
+                    disabled={selected.some((s) => s.slug === m.slug)}
+                    className="rounded-none border-[#333] text-[#888880] hover:text-[#F5F5F0] hover:bg-[#141414]"
+                  >
+                    {m.name}
+                  </Button>
+                ))}
             </div>
           </div>
         </BlurFade>

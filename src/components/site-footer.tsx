@@ -4,13 +4,13 @@ const footerLinks = {
   Market: [
     { label: "All Models", href: "/#models" },
     { label: "Compare", href: "/compare" },
-    { label: "Legends", href: "/#models" },
-    { label: "Classics", href: "/#models" },
+    { label: "Legends & Hypercars", href: "/#models" },
+    { label: "Classic V12 GTs", href: "/#models" },
+    { label: "Modern V8", href: "/#models" },
   ],
   Resources: [
     { label: "Methodology", href: "#" },
     { label: "Market Report", href: "#" },
-    { label: "Newsletter", href: "#" },
   ],
   Legal: [
     { label: "Privacy", href: "#" },
@@ -57,7 +57,10 @@ export function SiteFooter() {
             </div>
           ))}
         </div>
-        <div className="mt-12 border-t border-[#222] pt-8">
+        <div className="mt-12 border-t border-[#222] pt-8 space-y-3">
+          <p className="text-xs text-[#555]">
+            Market data sourced from ExoticCarMarketplace.com, TheClassicValuer.com, and public auction records. Updated March 2026.
+          </p>
           <p className="text-xs text-[#555]">
             &copy; 2026 Cavallino Analytics. All rights reserved. Not affiliated with Ferrari S.p.A. All values are estimates and should not be considered financial advice.
           </p>

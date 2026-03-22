@@ -8,8 +8,6 @@ import {
   ArrowLeft,
   ArrowUpRight,
   ArrowDownRight,
-  TrendingUp,
-  TrendingDown,
 } from "lucide-react";
 import {
   AreaChart,
@@ -26,53 +24,11 @@ import { Badge } from "@/components/ui/badge";
 import { BlurFade } from "@/components/magicui/blur-fade";
 import {
   getModelBySlug,
-  ferrariModels,
+  getModelsByCategory,
   formatCurrency,
   formatFullCurrency,
 } from "@/data/ferraris";
 import { getModelImage } from "@/data/images";
-
-function TimeHorizonBar({
-  label,
-  value,
-}: {
-  label: string;
-  value: number | null;
-}) {
-  if (value === null) {
-    return (
-      <div className="flex items-center justify-between py-3">
-        <span className="text-sm text-[#888880]">{label}</span>
-        <span className="text-sm text-[#555]">N/A</span>
-      </div>
-    );
-  }
-  const isPositive = value >= 0;
-  const maxWidth = Math.min(Math.abs(value), 100);
-  return (
-    <div className="py-3">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-sm text-[#888880]">{label}</span>
-        <span
-          className={`text-sm font-semibold ${
-            isPositive ? "text-gain" : "text-loss"
-          }`}
-        >
-          {isPositive ? "+" : ""}
-          {value}%
-        </span>
-      </div>
-      <div className="h-1.5 w-full bg-[#1a1a1a] overflow-hidden">
-        <div
-          className={`h-full transition-all ${
-            isPositive ? "bg-gain" : "bg-loss"
-          }`}
-          style={{ width: `${Math.max(maxWidth, 3)}%` }}
-        />
-      </div>
-    </div>
-  );
-}
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -102,15 +58,12 @@ export default function ModelDetailPage({
     notFound();
   }
 
-  const totalReturn = model.msrp
-    ? Math.round(((model.currentValue - model.msrp) / model.msrp) * 100)
-    : null;
+  const hasHistoricalRange = model.historicalValues.length > 1;
+  const isAppreciating = (model.sixYearChange ?? 0) >= 0;
 
-  const relatedModels = ferrariModels
-    .filter((m) => m.category === model.category && m.slug !== model.slug)
+  const relatedModels = getModelsByCategory(model.category)
+    .filter((m) => m.slug !== model.slug)
     .slice(0, 4);
-
-  const isAppreciating = (model.change1Y ?? 0) >= 0;
 
   return (
     <div>
@@ -154,12 +107,7 @@ export default function ModelDetailPage({
                         : "text-loss border-loss/30"
                     }`}
                   >
-                    {isAppreciating ? (
-                      <TrendingUp className="mr-1 size-3" />
-                    ) : (
-                      <TrendingDown className="mr-1 size-3" />
-                    )}
-                    {model.trend}
+                    {model.engine}
                   </Badge>
                 </div>
                 <h1 className="text-5xl font-bold tracking-[-0.02em] md:text-6xl lg:text-7xl text-[#F5F5F0]">
@@ -174,7 +122,7 @@ export default function ModelDetailPage({
                 <p className="text-4xl font-bold tabular-nums text-[#F5F5F0] md:text-5xl">
                   {formatFullCurrency(model.currentValue)}
                 </p>
-                {model.change1Y !== null && (
+                {model.sixYearChange !== null && (
                   <p
                     className={`mt-1 text-sm font-semibold inline-flex items-center gap-1 ${
                       isAppreciating ? "text-gain" : "text-loss"
@@ -186,7 +134,7 @@ export default function ModelDetailPage({
                       <ArrowDownRight className="size-4" />
                     )}
                     {isAppreciating ? "+" : ""}
-                    {model.change1Y}% past 12 months
+                    {model.sixYearChange.toFixed(1)}% over 6 years (2020-2026)
                   </p>
                 )}
               </div>
@@ -198,44 +146,50 @@ export default function ModelDetailPage({
       <div className="mx-auto max-w-6xl px-4 py-12">
         {/* Key Stats */}
         <BlurFade delay={0.05}>
-          <div className="mb-10 grid gap-4 sm:grid-cols-3">
-            {model.msrp && (
+          <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {model.startValue && (
               <div className="border border-[#222] bg-[#141414] p-6">
-                <p className="text-[10px] uppercase tracking-[0.15em] text-[#888880]">Original MSRP</p>
+                <p className="text-[10px] uppercase tracking-[0.15em] text-[#888880]">2020 Value</p>
                 <p className="mt-2 text-2xl font-bold tabular-nums text-[#F5F5F0]">
-                  {formatFullCurrency(model.msrp)}
+                  {formatFullCurrency(model.startValue)}
                 </p>
               </div>
             )}
             <div className="border border-[#222] bg-[#141414] p-6">
-              <p className="text-[10px] uppercase tracking-[0.15em] text-[#888880]">Current Value</p>
+              <p className="text-[10px] uppercase tracking-[0.15em] text-[#888880]">2026 Value</p>
               <p className="mt-2 text-2xl font-bold tabular-nums text-[#F5F5F0]">
                 {formatFullCurrency(model.currentValue)}
               </p>
             </div>
-            {totalReturn !== null && (
+            {model.sixYearChange !== null && (
               <div className="border border-[#222] bg-[#141414] p-6">
                 <p className="text-[10px] uppercase tracking-[0.15em] text-[#888880]">
-                  Total Return Since New
+                  6-Year Change
                 </p>
                 <p
                   className={`mt-2 text-2xl font-bold tabular-nums ${
-                    totalReturn >= 0 ? "text-gain" : "text-loss"
+                    model.sixYearChange >= 0 ? "text-gain" : "text-loss"
                   }`}
                 >
-                  {totalReturn >= 0 ? "+" : ""}
-                  {totalReturn.toLocaleString()}%
+                  {model.sixYearChange >= 0 ? "+" : ""}
+                  {model.sixYearChange.toFixed(1)}%
                 </p>
               </div>
             )}
+            <div className="border border-[#222] bg-[#141414] p-6">
+              <p className="text-[10px] uppercase tracking-[0.15em] text-[#888880]">Engine</p>
+              <p className="mt-2 text-2xl font-bold text-[#F5F5F0]">
+                {model.engine}
+              </p>
+            </div>
           </div>
         </BlurFade>
 
-        {/* Chart + Breakdown */}
-        <div className="mb-10 grid gap-6 lg:grid-cols-3">
-          <BlurFade delay={0.1} className="lg:col-span-2">
-            <div className="border border-[#222] bg-[#141414] p-6">
-              <h3 className="text-sm font-semibold text-[#F5F5F0] mb-6">Value History</h3>
+        {/* Chart */}
+        {hasHistoricalRange && (
+          <BlurFade delay={0.1}>
+            <div className="border border-[#222] bg-[#141414] p-6 mb-4">
+              <h3 className="text-sm font-semibold text-[#F5F5F0] mb-6">Value History (2020-2026)</h3>
               <div className="h-[350px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={model.historicalValues}>
@@ -288,37 +242,25 @@ export default function ModelDetailPage({
                 </ResponsiveContainer>
               </div>
             </div>
+            <p className="text-xs text-[#555] mb-10 italic">
+              Values derived from auction results, dealer listings, and private sales. Intermediate years estimated from market trends. Source: {model.dataSource}
+            </p>
           </BlurFade>
+        )}
 
-          <BlurFade delay={0.15}>
-            <div className="border border-[#222] bg-[#141414] p-6 h-full">
-              <h3 className="text-sm font-semibold text-[#F5F5F0] mb-4">Return by Time Horizon</h3>
-              <TimeHorizonBar label="1 Year" value={model.change1Y} />
-              <TimeHorizonBar label="5 Year" value={model.change5Y} />
-              <TimeHorizonBar label="10 Year" value={model.change10Y} />
-              {totalReturn !== null && (
-                <>
-                  <div className="my-2 border-t border-[#222]" />
-                  <TimeHorizonBar label="Since New" value={totalReturn} />
-                </>
-              )}
+        {!hasHistoricalRange && (
+          <BlurFade delay={0.1}>
+            <div className="border border-[#222] bg-[#141414] p-8 mb-10 text-center">
+              <p className="text-[#888880]">
+                Limited historical data available for this model. Only 2026 market value is tracked.
+              </p>
             </div>
           </BlurFade>
-        </div>
-
-        {/* Investment Thesis */}
-        <BlurFade delay={0.2}>
-          <div className="border border-[#222] bg-[#141414] p-8 mb-10">
-            <h3 className="text-sm font-semibold text-[#F5F5F0] mb-4">Investment Thesis</h3>
-            <p className="leading-relaxed text-[#888880]">
-              {model.thesis}
-            </p>
-          </div>
-        </BlurFade>
+        )}
 
         {/* Related Models */}
         {relatedModels.length > 0 && (
-          <BlurFade delay={0.25} inView>
+          <BlurFade delay={0.2} inView>
             <h2 className="mb-6 text-2xl font-bold tracking-[-0.02em] text-[#F5F5F0]">
               Related {model.category} Models
             </h2>
@@ -347,14 +289,16 @@ export default function ModelDetailPage({
                         <p className="text-lg font-bold tabular-nums text-[#F5F5F0]">
                           {formatCurrency(related.currentValue)}
                         </p>
-                        <span
-                          className={`text-sm font-semibold ${
-                            (related.change1Y ?? 0) >= 0 ? "text-gain" : "text-loss"
-                          }`}
-                        >
-                          {(related.change1Y ?? 0) >= 0 ? "+" : ""}
-                          {related.change1Y ?? 0}%
-                        </span>
+                        {related.sixYearChange !== null && (
+                          <span
+                            className={`text-sm font-semibold ${
+                              related.sixYearChange >= 0 ? "text-gain" : "text-loss"
+                            }`}
+                          >
+                            {related.sixYearChange >= 0 ? "+" : ""}
+                            {related.sixYearChange.toFixed(1)}%
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
