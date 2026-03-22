@@ -2,10 +2,11 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import dynamic from "next/dynamic";
 import { ArrowUpRight, ArrowDownRight, TrendingUp, Search, SlidersHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { BlurFade } from "@/components/magicui/blur-fade";
@@ -18,13 +19,19 @@ import {
   totalMarketValue,
   type Category,
 } from "@/data/ferraris";
+import { getModelImage } from "@/data/images";
+
+const HeroCar = dynamic(
+  () => import("@/components/hero-car").then((m) => m.HeroCar),
+  { ssr: false, loading: () => <div className="h-full w-full bg-[#0A0A0A]" /> }
+);
 
 type SortOption = "value-desc" | "value-asc" | "change-desc" | "change-asc" | "name";
 type FilterCategory = "All" | Category;
 type FilterTrend = "All" | "Appreciating" | "Depreciating" | "Above MSRP";
 
 function TrendArrow({ change }: { change: number | null }) {
-  if (change === null) return <span className="text-xs text-muted-foreground">N/A</span>;
+  if (change === null) return <span className="text-xs text-[#888880]">N/A</span>;
   const isPositive = change >= 0;
   return (
     <span className={`inline-flex items-center gap-0.5 text-sm font-semibold ${isPositive ? "text-gain" : "text-loss"}`}>
@@ -33,28 +40,6 @@ function TrendArrow({ change }: { change: number | null }) {
       {change}%
     </span>
   );
-}
-
-function categoryColor(category: Category): string {
-  switch (category) {
-    case "Legend":
-      return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400";
-    case "Classic":
-      return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-    case "Modern":
-      return "bg-zinc-100 text-zinc-800 dark:bg-zinc-800/50 dark:text-zinc-400";
-  }
-}
-
-function cardGradient(category: Category): string {
-  switch (category) {
-    case "Legend":
-      return "bg-gradient-to-br from-amber-500/20 to-amber-600/30 dark:from-amber-500/10 dark:to-amber-600/20";
-    case "Classic":
-      return "bg-gradient-to-br from-blue-500/20 to-blue-600/30 dark:from-blue-500/10 dark:to-blue-600/20";
-    case "Modern":
-      return "bg-gradient-to-br from-zinc-400/20 to-zinc-500/30 dark:from-zinc-500/10 dark:to-zinc-600/20";
-  }
 }
 
 export default function HomePage() {
@@ -111,94 +96,101 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="flex flex-col items-center justify-center gap-6 px-4 pb-12 pt-20 text-center md:pt-28">
-        <BlurFade delay={0}>
-          <div className="mb-2 inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-1.5 text-sm text-muted-foreground">
-            <TrendingUp className="size-4 text-[#DC0000]" />
-            Live market data for {totalModelsTracked} models
-          </div>
-        </BlurFade>
-        <BlurFade delay={0.05}>
-          <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-            Ferrari Market
-            <span className="text-[#DC0000]"> Intelligence</span>
-          </h1>
-        </BlurFade>
-        <BlurFade delay={0.1}>
-          <p className="max-w-2xl text-lg text-muted-foreground">
-            Track values, spot trends, and make informed decisions. From million-dollar legends to modern depreciators, we cover every corner of the Ferrari market.
-          </p>
-        </BlurFade>
-        <BlurFade delay={0.15}>
-          <div className="flex gap-3">
-            <Button size="lg" className="bg-[#DC0000] hover:bg-[#B30000] text-white" asChild>
-              <a href="#models">Explore Models</a>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/compare">Compare Values</Link>
-            </Button>
-          </div>
-        </BlurFade>
-      </section>
+      {/* Hero - Full bleed with 3D car */}
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-[#0A0A0A]">
+        {/* 3D Car Scene */}
+        <div className="absolute inset-0 opacity-60">
+          <HeroCar />
+        </div>
 
-      {/* Stats */}
-      <section className="border-y bg-muted/40 py-10">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-8 px-4 sm:gap-16">
-          <div className="text-center">
-            <p className="text-3xl font-bold">
-              <NumberTicker value={totalModelsTracked} />
-            </p>
-            <p className="text-sm text-muted-foreground">Models Tracked</p>
-          </div>
-          <div className="text-center">
-            <p className="text-3xl font-bold">
-              +<NumberTicker value={avgLegendAppreciation} />%
-            </p>
-            <p className="text-sm text-muted-foreground">Avg. Legend 5Y Return</p>
-          </div>
-          <div className="text-center">
-            <p className="text-3xl font-bold">
-              $<NumberTicker value={Math.round(totalMarketValue / 1000000)} />M
-            </p>
-            <p className="text-sm text-muted-foreground">Total Market Value</p>
-          </div>
-          <div className="text-center">
-            <p className="text-3xl font-bold text-[#DC0000]">
-              +<NumberTicker value={60} />%
-            </p>
-            <p className="text-sm text-muted-foreground">Top 1Y Gainer (F50)</p>
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/70 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-[#0A0A0A]/40" />
+
+        {/* Content overlay */}
+        <div className="relative z-10 container py-20">
+          <div className="max-w-2xl">
+            <BlurFade delay={0}>
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#333] bg-[#141414]/80 px-4 py-1.5 text-xs font-medium tracking-[0.1em] uppercase text-[#888880] backdrop-blur-sm">
+                <TrendingUp className="size-3.5 text-[#DC0000]" />
+                Live market data
+              </div>
+            </BlurFade>
+            <BlurFade delay={0.05}>
+              <h1 className="text-5xl font-bold tracking-[-0.02em] leading-[1.1] sm:text-6xl md:text-7xl lg:text-8xl text-[#F5F5F0]">
+                Ferrari Market
+                <br />
+                <span className="text-[#DC0000]">Intelligence</span>
+              </h1>
+            </BlurFade>
+            <BlurFade delay={0.1}>
+              <p className="mt-6 max-w-lg text-lg text-[#888880] leading-relaxed">
+                Track values, spot trends, and make informed decisions across {totalModelsTracked} models, from million-dollar legends to modern depreciators.
+              </p>
+            </BlurFade>
+            <BlurFade delay={0.15}>
+              <div className="mt-8 flex gap-4">
+                <Button size="lg" className="bg-[#DC0000] hover:bg-[#B30000] text-white rounded-none px-8 text-sm tracking-[0.05em] uppercase font-medium" asChild>
+                  <a href="#models">Explore Models</a>
+                </Button>
+                <Button size="lg" variant="outline" className="border-[#333] text-[#F5F5F0] hover:bg-[#141414] rounded-none px-8 text-sm tracking-[0.05em] uppercase font-medium" asChild>
+                  <Link href="/compare">Compare</Link>
+                </Button>
+              </div>
+            </BlurFade>
           </div>
         </div>
       </section>
 
+      {/* Stats - Huge animated numbers */}
+      <section className="border-y border-[#222] bg-[#0e0e0e] py-16">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-12 px-4 sm:gap-20">
+          {[
+            { value: totalModelsTracked, label: "MODELS TRACKED", prefix: "" },
+            { value: avgLegendAppreciation, label: "AVG LEGEND 5Y RETURN", prefix: "+" , suffix: "%" },
+            { value: Math.round(totalMarketValue / 1000000), label: "TOTAL MARKET VALUE", prefix: "$", suffix: "M" },
+            { value: 60, label: "TOP 1Y GAINER (F50)", prefix: "+", suffix: "%", highlight: true },
+          ].map((stat) => (
+            <div key={stat.label} className="text-center">
+              <p className={`text-5xl md:text-6xl font-bold tabular-nums tracking-[-0.02em] ${stat.highlight ? "text-[#DC0000]" : "text-[#F5F5F0]"}`}>
+                {stat.prefix}<NumberTicker value={stat.value} />{stat.suffix || ""}
+              </p>
+              <p className="mt-2 text-[10px] font-medium tracking-[0.15em] uppercase text-[#888880]">
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Model Grid */}
-      <section id="models" className="mx-auto max-w-7xl px-4 py-16">
+      <section id="models" className="mx-auto max-w-7xl px-4 py-20">
         <BlurFade delay={0} inView>
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold tracking-tight">All Models</h2>
-            <p className="mt-1 text-muted-foreground">
+          <div className="mb-10">
+            <h2 className="text-4xl font-bold tracking-[-0.02em] text-[#F5F5F0]">All Models</h2>
+            <p className="mt-2 text-sm text-[#888880]">
               {filtered.length} of {ferrariModels.length} models
             </p>
           </div>
         </BlurFade>
 
         {/* Search & Filters */}
-        <div className="mb-6 space-y-4">
+        <div className="mb-8 space-y-4">
           <div className="flex flex-col gap-3 sm:flex-row">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#888880]" />
               <Input
                 enterKeyHint="search"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-[#141414] border-[#222] text-[#F5F5F0] [&:not(:focus)]:text-[#555] rounded-none focus:ring-[#DC0000]"
+
               />
             </div>
             <Button
               variant="outline"
               onClick={() => setShowFilters(!showFilters)}
-              className="sm:w-auto"
+              className="sm:w-auto border-[#222] text-[#F5F5F0] hover:bg-[#141414] rounded-none"
             >
               <SlidersHorizontal className="mr-2 size-4" />
               Filters
@@ -206,9 +198,9 @@ export default function HomePage() {
           </div>
 
           {showFilters && (
-            <div className="flex flex-wrap gap-4 rounded-lg border bg-card p-4">
+            <div className="flex flex-wrap gap-6 rounded-none border border-[#222] bg-[#141414] p-6">
               <div>
-                <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <p className="mb-2 text-[10px] font-medium text-[#888880] uppercase tracking-[0.15em]">
                   Category
                 </p>
                 <div className="flex flex-wrap gap-1.5">
@@ -219,11 +211,11 @@ export default function HomePage() {
                         size="sm"
                         variant={categoryFilter === cat ? "default" : "outline"}
                         onClick={() => setCategoryFilter(cat)}
-                        className={
+                        className={`rounded-none text-xs ${
                           categoryFilter === cat
                             ? "bg-[#DC0000] hover:bg-[#B30000] text-white"
-                            : ""
-                        }
+                            : "border-[#333] text-[#888880] hover:text-[#F5F5F0]"
+                        }`}
                       >
                         {cat}
                       </Button>
@@ -232,7 +224,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div>
-                <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <p className="mb-2 text-[10px] font-medium text-[#888880] uppercase tracking-[0.15em]">
                   Trend
                 </p>
                 <div className="flex flex-wrap gap-1.5">
@@ -244,11 +236,11 @@ export default function HomePage() {
                       size="sm"
                       variant={trendFilter === t ? "default" : "outline"}
                       onClick={() => setTrendFilter(t)}
-                      className={
+                      className={`rounded-none text-xs ${
                         trendFilter === t
                           ? "bg-[#DC0000] hover:bg-[#B30000] text-white"
-                          : ""
-                      }
+                          : "border-[#333] text-[#888880] hover:text-[#F5F5F0]"
+                      }`}
                     >
                       {t}
                     </Button>
@@ -256,7 +248,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div>
-                <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <p className="mb-2 text-[10px] font-medium text-[#888880] uppercase tracking-[0.15em]">
                   Sort
                 </p>
                 <div className="flex flex-wrap gap-1.5">
@@ -272,11 +264,11 @@ export default function HomePage() {
                       size="sm"
                       variant={sort === s.value ? "default" : "outline"}
                       onClick={() => setSort(s.value)}
-                      className={
+                      className={`rounded-none text-xs ${
                         sort === s.value
                           ? "bg-[#DC0000] hover:bg-[#B30000] text-white"
-                          : ""
-                      }
+                          : "border-[#333] text-[#888880] hover:text-[#F5F5F0]"
+                      }`}
                     >
                       {s.label}
                     </Button>
@@ -287,60 +279,67 @@ export default function HomePage() {
           )}
         </div>
 
-        {/* Grid */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {/* Grid - Magazine layout with large image cards */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((model, i) => (
             <BlurFade key={model.slug} delay={Math.min(i * 0.03, 0.3)} inView>
               <Link href={`/models/${model.slug}`}>
-                <Card className="group cursor-pointer transition-all hover:shadow-lg hover:border-[#DC0000]/30">
-                  <div
-                    className={`relative h-36 rounded-t-lg ${cardGradient(model.category)} flex items-center justify-center overflow-hidden`}
-                  >
-                    <span className="text-2xl font-bold text-foreground/20 group-hover:text-foreground/30 transition-colors">
-                      {model.name}
-                    </span>
-                    <Badge
-                      className={`absolute top-2 right-2 text-[10px] ${categoryColor(model.category)}`}
-                      variant="secondary"
-                    >
-                      {model.category}
-                    </Badge>
+                <div className="group relative h-[380px] overflow-hidden border border-[#222] bg-[#141414] cursor-pointer transition-all duration-500 hover:border-[#DC0000]/40">
+                  {/* Background image */}
+                  <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-110">
+                    <Image
+                      src={getModelImage(model.slug)}
+                      alt={model.name}
+                      fill
+                      className="object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-500"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
                   </div>
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h3 className="font-semibold leading-tight group-hover:text-[#DC0000] transition-colors">
-                          {model.name}
-                        </h3>
-                        <p className="text-xs text-muted-foreground">
-                          {model.yearRange}
-                        </p>
-                      </div>
-                      <TrendArrow change={model.change1Y} />
-                    </div>
+
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/60 to-transparent" />
+
+                  {/* Category badge */}
+                  <div className="absolute top-4 left-4 z-10">
+                    <span className="text-[10px] font-medium tracking-[0.15em] uppercase text-[#888880] bg-[#0A0A0A]/70 px-2.5 py-1 backdrop-blur-sm border border-[#333]">
+                      {model.category}
+                    </span>
+                  </div>
+
+                  {/* Trend badge */}
+                  <div className="absolute top-4 right-4 z-10">
+                    <TrendArrow change={model.change1Y} />
+                  </div>
+
+                  {/* Content at bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+                    <p className="text-xs text-[#888880] mb-1">{model.yearRange}</p>
+                    <h3 className="text-2xl font-bold tracking-[-0.02em] text-[#F5F5F0] group-hover:text-[#DC0000] transition-colors duration-300">
+                      {model.name}
+                    </h3>
                     <div className="mt-3 flex items-end justify-between">
                       <div>
-                        <p className="text-xs text-muted-foreground">Current Value</p>
-                        <p className="text-lg font-bold tabular-nums">
+                        <p className="text-[10px] uppercase tracking-[0.15em] text-[#888880]">Current Value</p>
+                        <p className="text-xl font-bold tabular-nums text-[#F5F5F0]">
                           {formatCurrency(model.currentValue)}
                         </p>
                       </div>
                       <Badge
                         variant="outline"
-                        className={`text-[10px] ${
+                        className={`text-[10px] rounded-none border-[#333] ${
                           (model.change1Y ?? 0) > 0
-                            ? "border-gain/30 text-gain"
+                            ? "text-gain border-gain/30"
                             : (model.change1Y ?? 0) < 0
-                            ? "border-loss/30 text-loss"
-                            : ""
+                            ? "text-loss border-loss/30"
+                            : "text-[#888880]"
                         }`}
                       >
                         {model.trend}
                       </Badge>
                     </div>
                     {model.msrp && (
-                      <div className="mt-2 pt-2 border-t">
-                        <div className="flex justify-between text-xs text-muted-foreground">
+                      <div className="mt-3 pt-3 border-t border-[#333]">
+                        <div className="flex justify-between text-xs text-[#888880]">
                           <span>MSRP: {formatCurrency(model.msrp)}</span>
                           <span
                             className={
@@ -358,114 +357,108 @@ export default function HomePage() {
                         </div>
                       </div>
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </Link>
             </BlurFade>
           ))}
         </div>
 
         {filtered.length === 0 && (
-          <div className="py-20 text-center text-muted-foreground">
+          <div className="py-20 text-center text-[#888880]">
             No models match your filters. Try adjusting your search.
           </div>
         )}
       </section>
 
       {/* Market Overview */}
-      <section className="border-y bg-muted/40 py-16">
-        <div className="mx-auto max-w-5xl px-4">
+      <section className="border-y border-[#222] bg-[#0e0e0e] py-20">
+        <div className="mx-auto max-w-6xl px-4">
           <BlurFade delay={0} inView>
-            <h2 className="mb-8 text-3xl font-bold tracking-tight text-center">
+            <h2 className="mb-12 text-4xl font-bold tracking-[-0.02em] text-center text-[#F5F5F0]">
               Market Snapshot
             </h2>
           </BlurFade>
           <div className="grid gap-6 md:grid-cols-3">
             <BlurFade delay={0.05} inView>
-              <Card className="border-gain/20">
-                <CardContent className="p-6">
-                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                    Top Performers
-                  </h3>
-                  <div className="mt-4 space-y-3">
-                    {ferrariModels
-                      .filter((m) => m.change1Y !== null)
-                      .sort((a, b) => (b.change1Y ?? 0) - (a.change1Y ?? 0))
-                      .slice(0, 5)
-                      .map((m) => (
-                        <Link
-                          key={m.slug}
-                          href={`/models/${m.slug}`}
-                          className="flex items-center justify-between hover:text-[#DC0000] transition-colors"
-                        >
-                          <span className="text-sm font-medium">{m.name}</span>
-                          <TrendArrow change={m.change1Y} />
-                        </Link>
-                      ))}
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="border border-gain/20 bg-[#141414] p-6">
+                <h3 className="text-[10px] font-medium text-[#888880] uppercase tracking-[0.15em]">
+                  Top Performers
+                </h3>
+                <div className="mt-6 space-y-4">
+                  {ferrariModels
+                    .filter((m) => m.change1Y !== null)
+                    .sort((a, b) => (b.change1Y ?? 0) - (a.change1Y ?? 0))
+                    .slice(0, 5)
+                    .map((m) => (
+                      <Link
+                        key={m.slug}
+                        href={`/models/${m.slug}`}
+                        className="flex items-center justify-between hover:text-[#DC0000] transition-colors"
+                      >
+                        <span className="text-sm font-medium text-[#F5F5F0]">{m.name}</span>
+                        <TrendArrow change={m.change1Y} />
+                      </Link>
+                    ))}
+                </div>
+              </div>
             </BlurFade>
             <BlurFade delay={0.1} inView>
-              <Card className="border-loss/20">
-                <CardContent className="p-6">
-                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                    Biggest Decliners
-                  </h3>
-                  <div className="mt-4 space-y-3">
-                    {ferrariModels
-                      .filter((m) => (m.change1Y ?? 0) < 0)
-                      .sort((a, b) => (a.change1Y ?? 0) - (b.change1Y ?? 0))
-                      .slice(0, 5)
-                      .map((m) => (
-                        <Link
-                          key={m.slug}
-                          href={`/models/${m.slug}`}
-                          className="flex items-center justify-between hover:text-[#DC0000] transition-colors"
-                        >
-                          <span className="text-sm font-medium">{m.name}</span>
-                          <TrendArrow change={m.change1Y} />
-                        </Link>
-                      ))}
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="border border-loss/20 bg-[#141414] p-6">
+                <h3 className="text-[10px] font-medium text-[#888880] uppercase tracking-[0.15em]">
+                  Biggest Decliners
+                </h3>
+                <div className="mt-6 space-y-4">
+                  {ferrariModels
+                    .filter((m) => (m.change1Y ?? 0) < 0)
+                    .sort((a, b) => (a.change1Y ?? 0) - (b.change1Y ?? 0))
+                    .slice(0, 5)
+                    .map((m) => (
+                      <Link
+                        key={m.slug}
+                        href={`/models/${m.slug}`}
+                        className="flex items-center justify-between hover:text-[#DC0000] transition-colors"
+                      >
+                        <span className="text-sm font-medium text-[#F5F5F0]">{m.name}</span>
+                        <TrendArrow change={m.change1Y} />
+                      </Link>
+                    ))}
+                </div>
+              </div>
             </BlurFade>
             <BlurFade delay={0.15} inView>
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                    Market Insights
-                  </h3>
-                  <div className="mt-4 space-y-3 text-sm text-muted-foreground leading-relaxed">
-                    <p>
-                      The Ferrari collector market remains bifurcated. Legends and limited-production models continue to appreciate, while modern production cars face typical depreciation cycles.
-                    </p>
-                    <p>
-                      The F50 leads all models with +60% YoY growth, correcting years of undervaluation relative to its peers.
-                    </p>
-                    <p>
-                      Hybrid models like the SF90 face the steepest depreciation as technology risk premiums compress.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="border border-[#222] bg-[#141414] p-6">
+                <h3 className="text-[10px] font-medium text-[#888880] uppercase tracking-[0.15em]">
+                  Market Insights
+                </h3>
+                <div className="mt-6 space-y-4 text-sm text-[#888880] leading-relaxed">
+                  <p>
+                    The Ferrari collector market remains bifurcated. Legends and limited-production models continue to appreciate, while modern production cars face typical depreciation cycles.
+                  </p>
+                  <p>
+                    The F50 leads all models with +60% YoY growth, correcting years of undervaluation relative to its peers.
+                  </p>
+                  <p>
+                    Hybrid models like the SF90 face the steepest depreciation as technology risk premiums compress.
+                  </p>
+                </div>
+              </div>
             </BlurFade>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="px-4 py-16">
+      <section className="px-4 py-20">
         <BlurFade delay={0} inView>
-          <div className="mx-auto max-w-2xl rounded-2xl border bg-card p-8 text-center shadow-sm md:p-12">
-            <h2 className="mb-3 text-3xl font-bold tracking-tight">
+          <div className="mx-auto max-w-2xl border border-[#222] bg-[#141414] p-10 text-center md:p-16">
+            <h2 className="mb-4 text-3xl font-bold tracking-[-0.02em] text-[#F5F5F0]">
               Compare Models Head to Head
             </h2>
-            <p className="mb-6 text-muted-foreground">
+            <p className="mb-8 text-[#888880]">
               Select up to 4 models and compare values, trends, and investment potential side by side.
             </p>
-            <Button size="lg" className="bg-[#DC0000] hover:bg-[#B30000] text-white" asChild>
+            <Button size="lg" className="bg-[#DC0000] hover:bg-[#B30000] text-white rounded-none px-10 text-sm tracking-[0.05em] uppercase font-medium" asChild>
               <Link href="/compare">Open Comparison Tool</Link>
             </Button>
           </div>

@@ -2,48 +2,43 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
-  Ferrari-inspired palette.
-  Light: warm ivory backgrounds, Ferrari red accents, deep text.
-  Dark: charcoal backgrounds, Ferrari red accents, cream text.
-*/
-
 @theme inline {
-  --color-background: oklch(0.98 0.003 75);
-  --color-foreground: oklch(0.15 0.02 50);
-  --color-card: oklch(0.97 0.003 75);
-  --color-card-foreground: oklch(0.15 0.02 50);
-  --color-popover: oklch(0.97 0.003 75);
-  --color-popover-foreground: oklch(0.15 0.02 50);
-  --color-primary: oklch(0.52 0.22 25);
-  --color-primary-foreground: oklch(0.98 0.003 75);
-  --color-secondary: oklch(0.93 0.008 75);
-  --color-secondary-foreground: oklch(0.25 0.02 50);
-  --color-muted: oklch(0.93 0.006 75);
-  --color-muted-foreground: oklch(0.50 0.015 50);
-  --color-accent: oklch(0.91 0.01 75);
-  --color-accent-foreground: oklch(0.20 0.02 50);
-  --color-destructive: oklch(0.55 0.2 25);
-  --color-border: oklch(0.90 0.01 75);
-  --color-input: oklch(0.90 0.01 75);
-  --color-ring: oklch(0.52 0.22 25);
-  --color-chart-1: oklch(0.52 0.22 25);
-  --color-chart-2: oklch(0.60 0.15 145);
-  --color-chart-3: oklch(0.55 0.10 250);
-  --color-chart-4: oklch(0.65 0.12 75);
-  --color-chart-5: oklch(0.55 0.15 15);
-  --color-sidebar: oklch(0.96 0.003 75);
-  --color-sidebar-foreground: oklch(0.15 0.02 50);
-  --color-sidebar-primary: oklch(0.52 0.22 25);
-  --color-sidebar-primary-foreground: oklch(0.98 0.003 75);
-  --color-sidebar-accent: oklch(0.91 0.01 75);
-  --color-sidebar-accent-foreground: oklch(0.20 0.02 50);
-  --color-sidebar-border: oklch(0.90 0.01 75);
-  --color-sidebar-ring: oklch(0.52 0.22 25);
+  --color-background: #0A0A0A;
+  --color-foreground: #F5F5F0;
+  --color-card: #141414;
+  --color-card-foreground: #F5F5F0;
+  --color-popover: #141414;
+  --color-popover-foreground: #F5F5F0;
+  --color-primary: #DC0000;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #1a1a1a;
+  --color-secondary-foreground: #e0e0dc;
+  --color-muted: #1a1a1a;
+  --color-muted-foreground: #888880;
+  --color-accent: #1c1c1c;
+  --color-accent-foreground: #e0e0dc;
+  --color-destructive: #DC0000;
+  --color-border: #222222;
+  --color-input: #222222;
+  --color-ring: #DC0000;
+  --color-chart-1: #DC0000;
+  --color-chart-2: #D4A012;
+  --color-chart-3: #555555;
+  --color-chart-4: #888880;
+  --color-chart-5: #B30000;
+  --color-sidebar: #0e0e0e;
+  --color-sidebar-foreground: #F5F5F0;
+  --color-sidebar-primary: #DC0000;
+  --color-sidebar-primary-foreground: #ffffff;
+  --color-sidebar-accent: #1c1c1c;
+  --color-sidebar-accent-foreground: #e0e0dc;
+  --color-sidebar-border: #222222;
+  --color-sidebar-ring: #DC0000;
   --color-ferrari-red: #DC0000;
   --color-ferrari-red-dark: #B30000;
-  --color-gain: oklch(0.60 0.15 145);
-  --color-loss: oklch(0.55 0.2 25);
+  --color-gain: #22c55e;
+  --color-loss: #ef4444;
+  --color-gold: #D4A012;
   --radius: 0.5rem;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -62,41 +57,43 @@
 }
 
 .dark {
-  --color-background: oklch(0.14 0.01 50);
-  --color-foreground: oklch(0.92 0.008 75);
-  --color-card: oklch(0.18 0.01 50);
-  --color-card-foreground: oklch(0.92 0.008 75);
-  --color-popover: oklch(0.18 0.01 50);
-  --color-popover-foreground: oklch(0.92 0.008 75);
-  --color-primary: oklch(0.60 0.22 25);
-  --color-primary-foreground: oklch(0.98 0.003 75);
-  --color-secondary: oklch(0.22 0.01 50);
-  --color-secondary-foreground: oklch(0.88 0.008 75);
-  --color-muted: oklch(0.22 0.008 50);
-  --color-muted-foreground: oklch(0.62 0.015 75);
-  --color-accent: oklch(0.24 0.015 50);
-  --color-accent-foreground: oklch(0.88 0.008 75);
-  --color-destructive: oklch(0.55 0.2 25);
-  --color-border: oklch(0.28 0.01 50);
-  --color-input: oklch(0.28 0.01 50);
-  --color-ring: oklch(0.60 0.22 25);
-  --color-chart-1: oklch(0.60 0.22 25);
-  --color-chart-2: oklch(0.65 0.12 145);
-  --color-chart-3: oklch(0.65 0.10 250);
-  --color-chart-4: oklch(0.70 0.12 75);
-  --color-chart-5: oklch(0.65 0.15 15);
-  --color-sidebar: oklch(0.16 0.01 50);
-  --color-sidebar-foreground: oklch(0.92 0.008 75);
-  --color-sidebar-primary: oklch(0.60 0.22 25);
-  --color-sidebar-primary-foreground: oklch(0.98 0.003 75);
-  --color-sidebar-accent: oklch(0.24 0.015 50);
-  --color-sidebar-accent-foreground: oklch(0.88 0.008 75);
-  --color-sidebar-border: oklch(0.28 0.01 50);
-  --color-sidebar-ring: oklch(0.60 0.22 25);
+  --color-background: #0A0A0A;
+  --color-foreground: #F5F5F0;
+  --color-card: #141414;
+  --color-card-foreground: #F5F5F0;
+  --color-popover: #141414;
+  --color-popover-foreground: #F5F5F0;
+  --color-primary: #DC0000;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #1a1a1a;
+  --color-secondary-foreground: #e0e0dc;
+  --color-muted: #1a1a1a;
+  --color-muted-foreground: #888880;
+  --color-accent: #1c1c1c;
+  --color-accent-foreground: #e0e0dc;
+  --color-destructive: #DC0000;
+  --color-border: #222222;
+  --color-input: #222222;
+  --color-ring: #DC0000;
+  --color-chart-1: #DC0000;
+  --color-chart-2: #D4A012;
+  --color-chart-3: #555555;
+  --color-chart-4: #888880;
+  --color-chart-5: #B30000;
+  --color-sidebar: #0e0e0e;
+  --color-sidebar-foreground: #F5F5F0;
+  --color-sidebar-primary: #DC0000;
+  --color-sidebar-primary-foreground: #ffffff;
+  --color-sidebar-accent: #1c1c1c;
+  --color-sidebar-accent-foreground: #e0e0dc;
+  --color-sidebar-border: #222222;
+  --color-sidebar-ring: #DC0000;
 }
 
 body {
   font-family: var(--font-sans), system-ui, sans-serif;
+  background-color: #0A0A0A;
+  color: #F5F5F0;
 }
 
 code, pre {
